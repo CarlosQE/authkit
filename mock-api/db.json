@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@authkit.dev",
+      "password": "Admin1234!",
+      "firstName": "Carlos",
+      "lastName": "Admin",
+      "role": "admin",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "email": "editor@authkit.dev",
+      "password": "Editor1234!",
+      "firstName": "María",
+      "lastName": "Editor",
+      "role": "editor",
+      "createdAt": "2024-01-02T00:00:00.000Z"
+    }
+  ],
+  "sessions": []
+}
