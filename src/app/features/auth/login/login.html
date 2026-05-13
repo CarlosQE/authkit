@@ -1,1 +1,96 @@
-<p>login works!</p>
+<div class="auth-container">
+  <mat-card class="auth-card">
+
+    <mat-card-header>
+      <div class="auth-logo">AK</div>
+      <mat-card-title>Iniciar sesión</mat-card-title>
+      <mat-card-subtitle>Ingresá tus credenciales para continuar</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        @if (errorMessage()) {
+          <div class="error-banner">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            placeholder="tu@email.com"
+            autocomplete="email"
+          />
+          <mat-icon matPrefix>mail_outline</mat-icon>
+          @if (email.touched && email.hasError('required')) {
+            <mat-error>El email es requerido</mat-error>
+          } @else if (email.touched && email.hasError('email')) {
+            <mat-error>Ingresá un email válido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            autocomplete="current-password"
+          />
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePassword()"
+            [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (password.touched && password.hasError('required')) {
+            <mat-error>La contraseña es requerida</mat-error>
+          } @else if (password.touched && password.hasError('minlength')) {
+            <mat-error>Mínimo 8 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-extras">
+          <mat-checkbox formControlName="rememberMe" color="primary">
+            Recordarme
+          </mat-checkbox>
+          <a routerLink="/auth/forgot-password" class="forgot-link">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="submit-btn"
+          [disabled]="isLoading()"
+        >
+          @if (isLoading()) {
+            <mat-progress-spinner diameter="20" mode="indeterminate" />
+          } @else {
+            Ingresar
+          }
+        </button>
+
+      </form>
+    </mat-card-content>
+
+    <mat-card-footer>
+      <p class="register-link">
+        ¿No tenés cuenta?
+        <a routerLink="/auth/register">Registrate</a>
+      </p>
+    </mat-card-footer>
+
+  </mat-card>
+</div>

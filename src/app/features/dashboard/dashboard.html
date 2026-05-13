@@ -1,1 +1,106 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+
+  <header class="dashboard-header">
+    <div class="header-brand">
+      <div class="brand-logo">AK</div>
+      <span class="brand-name">AuthKit</span>
+    </div>
+    <div class="header-user">
+      <div class="user-info">
+        <span class="user-name">
+          {{ auth.user()?.firstName }} {{ auth.user()?.lastName }}
+        </span>
+        <span class="user-email">{{ auth.user()?.email }}</span>
+      </div>
+      <button mat-stroked-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Salir
+      </button>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+
+    <div class="welcome-section">
+      <h1>Bienvenido, {{ auth.user()?.firstName }} 👋</h1>
+      <p>Tu sesión está activa y el sistema de autenticación funciona correctamente.</p>
+    </div>
+
+    <div class="cards-grid">
+
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="card-icon icon-user">person</mat-icon>
+          <mat-card-title>Perfil</mat-card-title>
+          <mat-card-subtitle>Información de tu cuenta</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-row">
+            <span class="info-label">Nombre</span>
+            <span>{{ auth.user()?.firstName }} {{ auth.user()?.lastName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email</span>
+            <span>{{ auth.user()?.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Rol</span>
+            <mat-chip [class]="'role-chip role-' + auth.user()?.role">
+              {{ auth.user()?.role }}
+            </mat-chip>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Miembro desde</span>
+            <span>{{ auth.user()?.createdAt | date:'mediumDate' }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="card-icon icon-security">security</mat-icon>
+          <mat-card-title>Sesión activa</mat-card-title>
+          <mat-card-subtitle>Estado del sistema de auth</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="status-item">
+            <mat-icon class="status-ok">check_circle</mat-icon>
+            <span>JWT almacenado correctamente</span>
+          </div>
+          <div class="status-item">
+            <mat-icon class="status-ok">check_circle</mat-icon>
+            <span>Interceptor HTTP activo</span>
+          </div>
+          <div class="status-item">
+            <mat-icon class="status-ok">check_circle</mat-icon>
+            <span>Guards de ruta funcionando</span>
+          </div>
+          <div class="status-item">
+            <mat-icon class="status-ok">check_circle</mat-icon>
+            <span>Signals sincronizados</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      @if (auth.userRole() === UserRole.Admin) {
+        <mat-card class="info-card admin-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="card-icon icon-admin">admin_panel_settings</mat-icon>
+            <mat-card-title>Panel de administrador</mat-card-title>
+            <mat-card-subtitle>Solo visible para el rol admin</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="admin-note">
+              Este bloque es un ejemplo de contenido condicional por rol.
+              El guard <code>roleGuard(UserRole.Admin)</code> protege rutas completas,
+              y <code>&#64;if (auth.userRole() === UserRole.Admin)</code> oculta
+              secciones dentro de una página.
+            </p>
+          </mat-card-content>
+        </mat-card>
+      }
+
+    </div>
+  </main>
+
+</div>

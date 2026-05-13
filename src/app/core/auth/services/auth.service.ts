@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap, catchError, throwError } from 'rxjs';
+import { Observable, tap, catchError, throwError, EMPTY } from 'rxjs';
 
 import { environment } from '@env/environment';
 import {
@@ -112,28 +112,27 @@ export class AuthService {
   }
 
   private restoreSession(): void {
-    const token = localStorage.getItem(environment.tokenKey);
-    if (!token) return;
+  const token = localStorage.getItem(environment.tokenKey);
+  if (!token) return;
 
-    // El token existe pero necesitamos el usuario.
-    // Lo pedimos al backend para validar que el token sigue siendo válido.
-    this.http
-      .get<User>(`${environment.apiUrl}/auth/me`)
-      .pipe(catchError(() => {
-        // Token inválido o expirado — limpiamos y no hacemos nada.
+  this.http
+    .get<User>(`${environment.apiUrl}/auth/me`)
+    .pipe(
+      catchError(() => {
         localStorage.removeItem(environment.tokenKey);
         localStorage.removeItem(environment.refreshTokenKey);
-        return throwError(() => null);
-      }))
-      .subscribe({
-        next: user => {
-          this._state.set({
-            user,
-            accessToken: token,
-            isAuthenticated: true,
-            isLoading: false,
-          });
-        },
-      });
-  }
+        return EMPTY; // ← no lanza error, simplemente termina el observable
+      })
+    )
+    .subscribe({
+      next: user => {
+        this._state.set({
+          user,
+          accessToken: token,
+          isAuthenticated: true,
+          isLoading: false,
+        });
+      },
+    });
+}
 }
